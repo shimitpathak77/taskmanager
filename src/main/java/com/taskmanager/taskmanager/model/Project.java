@@ -4,8 +4,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.scheduling.config.Task;
-
 @Data
 @Entity
 @Table(name = "projects")
