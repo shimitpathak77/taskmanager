@@ -36,6 +36,9 @@ public class TaskService {
                 userRepository.findByEmail(assigneeEmail)
                         .orElseThrow(() -> new RuntimeException("Assignee not found"))
                 : currentUser;
+                if (!projectService.isProjectMember(projectId, assignee.getId())){
+                        throw new RuntimeException("Assignee must be a project member");
+                }
 
         Task task = new Task();
         task.setTitle(title);
