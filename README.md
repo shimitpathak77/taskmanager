@@ -157,7 +157,7 @@ Deployment target: Railway.
 Live URL:
 
 ```text
-To be added after deployment
+https://taskmanager-production-4c87.up.railway.app
 ```
 
 Required production environment variables:
@@ -173,5 +173,5 @@ PORT
 
 ## Submission
 
-- Live URL: To be added
+- Live URL: https://taskmanager-production-4c87.up.railway.app
 - GitHub Repo: https://github.com/shimitpathak77/taskmanager
