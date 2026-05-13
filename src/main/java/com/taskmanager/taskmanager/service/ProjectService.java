@@ -48,11 +48,13 @@ public class ProjectService {
     }
 
     public Project getProjectById(Long id) {
+        requireProjectMember(id);
         return projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
     public ProjectMember addMember(Long projectId, String email, User.Role role) {
+        requireProjectAdmin(projectId);
         Project project = getProjectById(projectId);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -70,6 +72,7 @@ public class ProjectService {
     }
 
     public List<ProjectMember> getProjectMembers(Long projectId) {
+        requireProjectMember(projectId);
         return projectMemberRepository.findByProjectId(projectId);
     }
 
@@ -79,4 +82,27 @@ public class ProjectService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+    public ProjectMember getMembership(Long projectId, Long userId) {
+    return projectMemberRepository.findByProjectIdAndUserId(projectId, userId)
+            .orElseThrow(() -> new RuntimeException("Access denied"));
+}
+
+public void requireProjectMember(Long projectId) {
+    User currentUser = getCurrentUser();
+    getMembership(projectId, currentUser.getId());
+}
+
+public void requireProjectAdmin(Long projectId) {
+    User currentUser = getCurrentUser();
+    ProjectMember membership = getMembership(projectId, currentUser.getId());
+
+    if (membership.getRole() != User.Role.ADMIN) {
+        throw new RuntimeException("Admin access required");
+    }
+}
+
+public boolean isProjectMember(Long projectId, Long userId) {
+    return projectMemberRepository.existsByProjectIdAndUserId(projectId, userId);
+}
+
 }

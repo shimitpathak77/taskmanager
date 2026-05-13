@@ -4,6 +4,7 @@ import com.taskmanager.taskmanager.model.Task;
 import com.taskmanager.taskmanager.model.Task.TaskStatus;
 import com.taskmanager.taskmanager.model.User;
 import com.taskmanager.taskmanager.model.Project;
+import com.taskmanager.taskmanager.model.ProjectMember;
 import com.taskmanager.taskmanager.repository.TaskRepository;
 import com.taskmanager.taskmanager.repository.UserRepository;
 import com.taskmanager.taskmanager.repository.ProjectRepository;
@@ -26,6 +27,7 @@ public class TaskService {
     public Task createTask(Long projectId, String title,
                            String description, LocalDate dueDate,
                            String assigneeEmail) {
+        projectService.requireProjectAdmin(projectId);
         User currentUser = projectService.getCurrentUser();
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
@@ -48,6 +50,7 @@ public class TaskService {
     }
 
     public List<Task> getTasksByProject(Long projectId) {
+        projectService.requireProjectMember(projectId);
         return taskRepository.findByProjectId(projectId);
     }
 
@@ -57,16 +60,34 @@ public class TaskService {
     }
 
     public Task updateTaskStatus(Long taskId, TaskStatus status) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-        task.setStatus(status);
-        return taskRepository.save(task);
+    User currentUser = projectService.getCurrentUser();
+
+    Task task = taskRepository.findById(taskId)
+            .orElseThrow(() -> new RuntimeException("Task not found"));
+
+    Long projectId = task.getProject().getId();
+
+    ProjectMember membership = projectService.getMembership(projectId, currentUser.getId());
+
+    boolean isAdmin = membership.getRole() == User.Role.ADMIN;
+    boolean isAssignee = task.getAssignee().getId().equals(currentUser.getId());
+
+    if (!isAdmin && !isAssignee) {
+        throw new RuntimeException("Access denied");
     }
+
+    task.setStatus(status);
+    return taskRepository.save(task);
+    }
+
 
     public Task updateTask(Long taskId, String title, String description,
                            LocalDate dueDate, String assigneeEmail) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
+        
+        Long projectId = task.getProject().getId();
+         projectService.requireProjectAdmin(projectId);
 
         if (title != null) task.setTitle(title);
         if (description != null) task.setDescription(description);
@@ -74,6 +95,9 @@ public class TaskService {
         if (assigneeEmail != null) {
             User assignee = userRepository.findByEmail(assigneeEmail)
                     .orElseThrow(() -> new RuntimeException("User not found"));
+            if (!projectService.isProjectMember(projectId, assignee.getId())) {
+            throw new RuntimeException("Assignee must be a project member");
+                }
             task.setAssignee(assignee);
         }
 
