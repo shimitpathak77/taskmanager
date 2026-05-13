@@ -1,6 +1,6 @@
 # Team Task Manager
 
-A Spring Boot REST API for managing team projects, members, tasks, and progress tracking with JWT authentication and project-level role-based access control.
+A full-stack Spring Boot web app for managing team projects, members, tasks, and progress tracking with JWT authentication and project-level role-based access control.
 
 ## Features
 
@@ -11,6 +11,7 @@ A Spring Boot REST API for managing team projects, members, tasks, and progress 
 - Dashboard stats for total, todo, in-progress, done, and overdue tasks
 - Validation for auth requests
 - Integration tests for authentication, RBAC, task assignment, and dashboard flows
+- Basic frontend served from Spring Boot static resources
 
 ## Tech Stack
 
@@ -23,6 +24,17 @@ A Spring Boot REST API for managing team projects, members, tasks, and progress 
 - PostgreSQL
 - H2 for integration tests
 - Maven
+- HTML, CSS, and JavaScript
+
+## Frontend
+
+The app includes a basic browser UI served by Spring Boot from `src/main/resources/static`.
+
+Local URL:
+
+```text
+http://localhost:8080
+```
 
 ## API Endpoints
 

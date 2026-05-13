@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Task Manager</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="shell">
+        <section id="authView" class="auth-layout">
+            <div class="brand-panel">
+                <p class="eyebrow">Team Task Manager</p>
+                <h1>Projects, tasks, and progress in one place.</h1>
+            </div>
+
+            <div class="auth-panel">
+                <div class="tabs" role="tablist" aria-label="Authentication">
+                    <button class="tab active" id="loginTab" type="button">Login</button>
+                    <button class="tab" id="signupTab" type="button">Signup</button>
+                </div>
+
+                <form id="loginForm" class="form">
+                    <label>
+                        Email
+                        <input id="loginEmail" type="email" autocomplete="email" required>
+                    </label>
+                    <label>
+                        Password
+                        <input id="loginPassword" type="password" autocomplete="current-password" required>
+                    </label>
+                    <button class="primary-btn" type="submit">Login</button>
+                </form>
+
+                <form id="signupForm" class="form hidden">
+                    <label>
+                        Name
+                        <input id="signupName" type="text" autocomplete="name" required>
+                    </label>
+                    <label>
+                        Email
+                        <input id="signupEmail" type="email" autocomplete="email" required>
+                    </label>
+                    <label>
+                        Password
+                        <input id="signupPassword" type="password" autocomplete="new-password" minlength="6" required>
+                    </label>
+                    <button class="primary-btn" type="submit">Create account</button>
+                </form>
+
+                <p id="authMessage" class="message" role="status"></p>
+            </div>
+        </section>
+
+        <section id="appView" class="app-layout hidden">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">Workspace</p>
+                    <h1>Team Task Manager</h1>
+                </div>
+                <div class="user-actions">
+                    <span id="currentUser" class="current-user"></span>
+                    <button id="logoutBtn" class="ghost-btn" type="button">Logout</button>
+                </div>
+            </header>
+
+            <section class="stats-grid" aria-label="Dashboard">
+                <article class="stat">
+                    <span>Total</span>
+                    <strong id="totalCount">0</strong>
+                </article>
+                <article class="stat">
+                    <span>Todo</span>
+                    <strong id="todoCount">0</strong>
+                </article>
+                <article class="stat">
+                    <span>In Progress</span>
+                    <strong id="inProgressCount">0</strong>
+                </article>
+                <article class="stat">
+                    <span>Done</span>
+                    <strong id="doneCount">0</strong>
+                </article>
+                <article class="stat danger">
+                    <span>Overdue</span>
+                    <strong id="overdueCount">0</strong>
+                </article>
+            </section>
+
+            <section class="workspace-grid">
+                <aside class="panel">
+                    <div class="panel-heading">
+                        <h2>Projects</h2>
+                        <button id="refreshBtn" class="icon-btn" type="button" title="Refresh">↻</button>
+                    </div>
+
+                    <form id="projectForm" class="compact-form">
+                        <input id="projectName" type="text" placeholder="Project name" required>
+                        <textarea id="projectDescription" placeholder="Description" rows="3"></textarea>
+                        <button class="primary-btn" type="submit">Create project</button>
+                    </form>
+
+                    <div id="projectList" class="list"></div>
+                </aside>
+
+                <section class="panel main-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h2 id="selectedProjectName">Select a project</h2>
+                            <p id="selectedProjectDescription" class="muted"></p>
+                        </div>
+                    </div>
+
+                    <div id="projectTools" class="project-tools hidden">
+                        <form id="memberForm" class="inline-form">
+                            <input id="memberEmail" type="email" placeholder="Member email" required>
+                            <select id="memberRole">
+                                <option value="MEMBER">Member</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                            <button class="secondary-btn" type="submit">Add member</button>
+                        </form>
+
+                        <form id="taskForm" class="task-form">
+                            <input id="taskTitle" type="text" placeholder="Task title" required>
+                            <input id="taskAssignee" type="email" placeholder="Assignee email">
+                            <input id="taskDueDate" type="date">
+                            <textarea id="taskDescription" placeholder="Description" rows="3"></textarea>
+                            <button class="primary-btn" type="submit">Create task</button>
+                        </form>
+
+                        <div class="split">
+                            <div>
+                                <h3>Members</h3>
+                                <div id="memberList" class="list small-list"></div>
+                            </div>
+                            <div>
+                                <h3>Tasks</h3>
+                                <div id="taskList" class="task-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="panel">
+                    <h2>My Tasks</h2>
+                    <div id="myTaskList" class="task-list"></div>
+                </aside>
+            </section>
+
+            <p id="appMessage" class="message" role="status"></p>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>
