@@ -4,6 +4,8 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Data
 @Entity
 @Table(name = "tasks")
@@ -22,6 +24,7 @@ public class Task {
 
     private LocalDate dueDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
@@ -30,6 +33,7 @@ public class Task {
     @JoinColumn(name = "assignee_id")
     private User assignee;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
