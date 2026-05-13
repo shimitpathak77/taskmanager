@@ -43,4 +43,34 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasksByProject(projectId));
     }
 
-    @Put
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Task> updateStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+        Task task = taskService.updateTaskStatus(
+                id,
+                TaskStatus.valueOf(request.get("status"))
+        );
+        return ResponseEntity.ok(task);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+        Task task = taskService.updateTask(
+                id,
+                request.get("title"),
+                request.get("description"),
+                request.get("dueDate") != null ?
+                        LocalDate.parse(request.get("dueDate")) : null,
+                request.get("assigneeEmail")
+        );
+        return ResponseEntity.ok(task);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<Map<String, Long>> getDashboard() {
+        return ResponseEntity.ok(taskService.getDashboardStats());
+    }
+}
